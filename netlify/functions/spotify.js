@@ -66,6 +66,10 @@ exports.handler = async () => {
             get({ ...headers, path: '/v1/me/player/recently-played?limit=5' }),
         ]);
 
+        // Surface Spotify API errors instead of silently returning empty
+        if (topArtists.error)   throw new Error(`Spotify artists error: ${JSON.stringify(topArtists.error)}`);
+        if (recentTracks.error) throw new Error(`Spotify recent error: ${JSON.stringify(recentTracks.error)}`);
+
         const artists = (topArtists.items || []).map(a => ({
             name:      a.name,
             genres:    (a.genres || []).slice(0, 2),

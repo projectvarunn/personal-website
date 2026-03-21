@@ -1,0 +1,12 @@
+# Spotify token generator — contains credentials, never commit
+get-spotify-token.js
+
+# Obsidian & system
+.obsidian/
+.claude/
+Untitled.base
+Untitled.canvas
+
+# OS
+.DS_Store
+Thumbs.db

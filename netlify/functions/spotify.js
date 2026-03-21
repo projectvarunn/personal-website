@@ -62,7 +62,7 @@ exports.handler = async () => {
         };
 
         const [topArtists, recentTracks] = await Promise.all([
-            get({ ...headers, path: '/v1/me/top/artists?limit=6&time_range=short_term' }),
+            get({ ...headers, path: '/v1/me/top/artists?limit=6&time_range=medium_term' }),
             get({ ...headers, path: '/v1/me/player/recently-played?limit=5' }),
         ]);
 

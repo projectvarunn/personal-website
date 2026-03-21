@@ -132,9 +132,45 @@
             margin: 0 auto;
         }
 
+        /* ─── MOBILE ──────────────────────────────────────── */
         @media (max-width: 860px) {
-            #hero { grid-template-columns: 1fr; padding-top: 5rem; }
-            #hero-photo { max-width: 360px; margin: 0 auto; }
+            #hero {
+                grid-template-columns: 130px 1fr;
+                min-height: auto;
+                padding-top: 2rem;
+                gap: 0;
+            }
+            #hero-text {
+                padding: 0.75rem 1rem 1rem 1rem;
+            }
+            .h-label { font-size: 0.55rem; margin-bottom: 0.6rem; }
+            .h-name  { font-size: 1.9rem; }
+            .h-bar   { margin: 0.9rem 0; width: 24px; }
+            .h-meta  { font-size: 0.68rem; line-height: 1.8; margin-bottom: 1.2rem; }
+            .h-tagline { font-size: 0.8rem; }
+        }
+
+        @media (max-width: 540px) {
+            #hero { grid-template-columns: 110px 1fr; padding: 1.5rem 1rem; }
+            .h-name { font-size: 1.5rem; }
+            .h-meta { font-size: 0.62rem; }
+
+            #processes { padding: 0 1rem 3rem; }
+            .ptable thead th,
+            .ptable tbody td { padding: 0.7rem 0.6rem; font-size: 0.7rem; }
+            .load { display: none; }
+            .ptable th:last-child { display: none; }
+
+            #monologue { padding: 4rem 1.2rem; }
+            .mono-body { font-size: 0.95rem; line-height: 1.9; }
+
+            #laminated { padding: 0 1rem 4rem; }
+            #spotify   { padding: 0 1rem 3rem; }
+            #footer    { padding: 1.5rem 1rem; font-size: 0.62rem; }
+            .f-links   { gap: 1.2rem; }
+
+            .sec-label { font-size: 0.55rem; }
+            .lam-r { display: none; }
         }
 
         #hero-photo .win-body { padding: 0; }
@@ -425,121 +461,27 @@
         }
         .f-links a:hover { color: var(--accent); }
 
-        /* ─── SPOTIFY ─────────────────────────────────────── */
+        /* ─── SPOTIFY EMBEDS ──────────────────────────────── */
         #spotify {
             padding: 0 clamp(1.5rem, 5vw, 4rem) 4rem;
             max-width: 1280px;
             margin: 0 auto;
         }
 
-        .sp-grid {
+        .sp-embed-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
 
-        .sp-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            overflow: hidden;
-            text-decoration: none;
-            display: block;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .sp-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .sp-card img {
+        .sp-embed-grid iframe {
+            border-radius: 8px;
             width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
             display: block;
-            filter: grayscale(20%);
-            transition: filter 0.2s;
         }
 
-        .sp-card:hover img { filter: grayscale(0%); }
-
-        .sp-card-info {
-            padding: 0.75rem;
-        }
-
-        .sp-card-name {
-            font-size: 0.75rem;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 0.25rem;
-        }
-
-        .sp-card-genre {
-            font-size: 0.62rem;
-            color: var(--muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .sp-skeleton {
-            background: var(--surface);
-            border-radius: 6px;
-            aspect-ratio: 1;
-            animation: shimmer 1.5s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0%,100% { opacity: 0.4; }
-            50%      { opacity: 0.8; }
-        }
-
-        .sp-track {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid var(--faint);
-            text-decoration: none;
-            transition: background 0.15s;
-        }
-
-        .sp-track:last-child { border-bottom: none; }
-        .sp-track:hover .sp-track-name { color: var(--accent); }
-
-        .sp-track img {
-            width: 32px;
-            height: 32px;
-            border-radius: 3px;
-            object-fit: cover;
-            flex-shrink: 0;
-            filter: grayscale(30%);
-        }
-
-        .sp-track-name {
-            font-size: 0.75rem;
-            color: var(--text);
-            transition: color 0.15s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .sp-track-artist {
-            font-size: 0.65rem;
-            color: var(--muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .sp-error {
-            font-size: 0.75rem;
-            color: var(--muted);
-            font-style: italic;
+        @media (max-width: 600px) {
+            .sp-embed-grid { grid-template-columns: 1fr; }
         }
 
         /* ─── PLACEHOLDER FALLBACK ────────────────────────── */
@@ -719,31 +661,23 @@
         <div class="win">
             <div class="win-bar">
                 <div class="dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div>
-                <span class="win-title">spotify.process — currently running</span>
+                <span class="win-title">spotify.process — currently playing</span>
             </div>
             <div style="padding: 1.8rem">
-
-                <div class="sec-label" style="margin-bottom:2rem">top artists · last 4 weeks</div>
-
-                <div id="spotify-artists" class="sp-grid">
-                    <!-- loaded by JS -->
-                    <div class="sp-skeleton"></div>
-                    <div class="sp-skeleton"></div>
-                    <div class="sp-skeleton"></div>
-                    <div class="sp-skeleton"></div>
-                    <div class="sp-skeleton"></div>
-                    <div class="sp-skeleton"></div>
+                <div class="sec-label" style="margin-bottom:1.2rem">top artists · on repeat</div>
+                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:2rem">
+                    <span style="font-size:0.72rem;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:0.35rem 0.8rem;">J. Cole</span>
+                    <span style="font-size:0.72rem;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:0.35rem 0.8rem;">Seedhe Maut</span>
+                    <span style="font-size:0.72rem;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:0.35rem 0.8rem;">Kanye West</span>
                 </div>
 
-                <div class="sec-label" style="margin:2.5rem 0 1.5rem">recently played</div>
-
-                <div id="spotify-recent">
-                    <!-- loaded by JS -->
-                    <div class="sp-skeleton" style="height:2.5rem;margin-bottom:0.6rem"></div>
-                    <div class="sp-skeleton" style="height:2.5rem;margin-bottom:0.6rem"></div>
-                    <div class="sp-skeleton" style="height:2.5rem;margin-bottom:0.6rem"></div>
+                <div class="sec-label" style="margin-bottom:1.5rem">playlists · on rotation</div>
+                <div class="sp-embed-grid">
+                    <iframe src="https://open.spotify.com/embed/playlist/2gW47UT2gGTTv1G4pHzSF2?utm_source=generator&theme=0" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    <iframe src="https://open.spotify.com/embed/playlist/36GQ4aRCMpRSt1tL0EwH5S?utm_source=generator&theme=0" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    <iframe src="https://open.spotify.com/embed/playlist/34FoEzOj7CEbfceEXeEoeJ?utm_source=generator&theme=0" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    <iframe src="https://open.spotify.com/embed/playlist/7FM4SleGG11PWwSkIgLiyk?utm_source=generator&theme=0" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                 </div>
-
             </div>
         </div>
     </section>
@@ -836,50 +770,6 @@
         bootEl.style.display = 'none';
     }, t + 1400);
 
-    // ── Spotify ──────────────────────────────────────────────
-    async function loadSpotify() {
-        try {
-            const res  = await fetch('/.netlify/functions/spotify');
-            const data = await res.json();
-
-            // Artists
-            const grid = document.getElementById('spotify-artists');
-            if (data.artists && data.artists.length) {
-                grid.innerHTML = data.artists.map(a => `
-                    <a class="sp-card" href="${a.url}" target="_blank" rel="noopener">
-                        ${a.image ? `<img src="${a.image}" alt="${a.name}" loading="lazy">` : '<div style="aspect-ratio:1;background:var(--dim)"></div>'}
-                        <div class="sp-card-info">
-                            <div class="sp-card-name">${a.name}</div>
-                            <div class="sp-card-genre">${a.genres.join(', ') || '—'}</div>
-                        </div>
-                    </a>
-                `).join('');
-            } else {
-                grid.innerHTML = '<p class="sp-error">no data yet — play some music first.</p>';
-            }
-
-            // Recent tracks
-            const recentEl = document.getElementById('spotify-recent');
-            if (data.recent && data.recent.length) {
-                recentEl.innerHTML = data.recent.map(t => `
-                    <a class="sp-track" href="${t.url}" target="_blank" rel="noopener">
-                        ${t.image ? `<img src="${t.image}" alt="${t.track}">` : '<div style="width:32px;height:32px;background:var(--dim);border-radius:3px;flex-shrink:0"></div>'}
-                        <div style="min-width:0">
-                            <div class="sp-track-name">${t.track}</div>
-                            <div class="sp-track-artist">${t.artist}</div>
-                        </div>
-                    </a>
-                `).join('');
-            } else {
-                recentEl.innerHTML = '<p class="sp-error">nothing recently played.</p>';
-            }
-        } catch (e) {
-            document.getElementById('spotify-artists').innerHTML = '<p class="sp-error">spotify offline — will retry on next load.</p>';
-            document.getElementById('spotify-recent').innerHTML  = '';
-        }
-    }
-
-    loadSpotify();
 
     // ── Footnote toggle ──────────────────────────────────────
     document.querySelectorAll('.fn').forEach(fn => {

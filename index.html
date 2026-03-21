@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VarunOS — the run is all that matters</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #080808;
+            --surface:  #111111;
+            --border:   #1e1e1e;
+            --dim:      #242424;
+            --accent:   #c8ff00;
+            --text:     #e4e4e4;
+            --muted:    #484848;
+            --faint:    #2a2a2a;
+            --green:    #3ddc84;
+            --amber:    #ffb300;
+            --red:      #ff5f57;
+            --mono:     'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--mono);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        ::selection { background: var(--accent); color: var(--bg); }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--dim); }
+
+        /* ─── BOOT SCREEN ─────────────────────────────────── */
+        #boot {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 3rem clamp(1.5rem, 6vw, 5rem);
+            transition: opacity 0.6s ease;
+        }
+
+        #boot.out { opacity: 0; pointer-events: none; }
+
+        #boot-lines {
+            font-size: clamp(0.72rem, 1.4vw, 0.85rem);
+            color: var(--accent);
+            line-height: 2;
+        }
+
+        #boot-lines .bl {
+            display: block;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        #boot-lines .bl.show { opacity: 1; transform: none; }
+
+        .bc {
+            display: inline-block;
+            width: 7px;
+            height: 0.85em;
+            background: var(--accent);
+            vertical-align: text-bottom;
+            animation: blink 0.9s step-end infinite;
+        }
+
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        /* ─── MAIN ────────────────────────────────────────── */
+        #main { opacity: 0; transition: opacity 0.7s ease; }
+        #main.show { opacity: 1; }
+
+        /* ─── WINDOW ──────────────────────────────────────── */
+        .win {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .win-bar {
+            background: #161616;
+            border-bottom: 1px solid var(--border);
+            padding: 9px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .dots { display: flex; gap: 6px; }
+        .dots span {
+            width: 11px; height: 11px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .d-r { background: #ff5f57; }
+        .d-y { background: #ffbd2e; }
+        .d-g { background: #28c840; }
+
+        .win-title {
+            font-size: 0.68rem;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* ─── HERO ────────────────────────────────────────── */
+        #hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 0;
+            padding: 2rem clamp(1.5rem, 5vw, 4rem);
+            align-items: center;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 860px) {
+            #hero { grid-template-columns: 1fr; padding-top: 5rem; }
+            #hero-photo { max-width: 360px; margin: 0 auto; }
+        }
+
+        #hero-photo .win-body { padding: 0; }
+
+        .photo-wrap { position: relative; overflow: hidden; }
+
+        .photo-wrap img {
+            width: 100%;
+            display: block;
+            filter: grayscale(25%) contrast(1.1) brightness(0.88);
+            transition: filter 0.4s ease;
+        }
+
+        .photo-wrap:hover img { filter: grayscale(0%) contrast(1.05) brightness(0.95); }
+
+        .photo-shade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(8,8,8,0.65) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .photo-tag {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        /* ─── HERO TEXT ───────────────────────────────────── */
+        #hero-text {
+            padding: 2rem 2rem 2rem clamp(2rem, 4vw, 4rem);
+        }
+
+        .h-label {
+            font-size: 0.63rem;
+            color: var(--muted);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+        }
+
+        .h-label::before { content: '> '; color: var(--accent); }
+
+        .h-name {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 700;
+            line-height: 0.92;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 0.2rem;
+        }
+
+        .h-bar {
+            width: 36px;
+            height: 3px;
+            background: var(--accent);
+            margin: 1.8rem 0;
+        }
+
+        .h-meta {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 2.2;
+            margin-bottom: 2.5rem;
+        }
+
+        .h-meta strong { color: var(--text); font-weight: 500; }
+
+        .h-tagline {
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            color: var(--accent);
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        .h-tagline::before { content: '> '; color: var(--muted); font-weight: 300; }
+
+        /* ─── PROCESSES ───────────────────────────────────── */
+        #processes {
+            padding: 0 clamp(1.5rem, 5vw, 4rem) 4rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .ptable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+
+        .ptable thead th {
+            padding: 0.8rem 1.2rem;
+            text-align: left;
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            font-weight: 400;
+            border-bottom: 1px solid var(--faint);
+        }
+
+        .ptable tbody td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--faint);
+            vertical-align: middle;
+        }
+
+        .ptable tbody tr:last-child td { border-bottom: none; }
+
+        .ptable tbody tr {
+            transition: background 0.15s ease;
+            cursor: default;
+        }
+
+        .ptable tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+        .pid { color: var(--muted); font-size: 0.63rem; }
+
+        .s-dot {
+            display: inline-block;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            margin-right: 7px;
+            vertical-align: middle;
+        }
+
+        .s-active   { color: var(--green); }
+        .s-active   .s-dot { background: var(--green); }
+        .s-compile  { color: var(--amber); }
+        .s-compile  .s-dot { background: var(--amber); animation: pulse 1.6s ease-in-out infinite; }
+        .s-monitor  { color: var(--accent); }
+        .s-monitor  .s-dot { background: var(--accent); }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+        .load { color: var(--muted); font-size: 0.7rem; }
+
+        /* ─── MONOLOGUE ───────────────────────────────────── */
+        #monologue {
+            padding: 6rem clamp(1.5rem, 10vw, 12rem);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .sec-label {
+            font-size: 0.62rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .sec-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--faint);
+        }
+
+        .mono-body {
+            font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+            line-height: 2.1;
+            color: var(--text);
+        }
+
+        .mono-body p { margin-bottom: 1.8rem; }
+
+        .mono-body .dim { color: var(--muted); }
+
+        /* Footnote superscript */
+        .fn {
+            color: var(--accent);
+            font-size: 0.65em;
+            vertical-align: super;
+            cursor: pointer;
+            padding: 0 1px;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.15s;
+            user-select: none;
+        }
+
+        .fn:hover { border-color: var(--accent); }
+
+        /* Footnote reveal block */
+        .fn-box {
+            display: none;
+            border-left: 2px solid var(--accent);
+            margin: -1rem 0 2rem 0;
+            padding: 0.6rem 1rem 0.6rem 1.2rem;
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .fn-box.open { display: block; }
+
+        /* ─── LAMINATED LIST ──────────────────────────────── */
+        #laminated {
+            padding: 0 clamp(1.5rem, 5vw, 4rem) 6rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .lam-header {
+            margin-bottom: 2rem;
+        }
+
+        .lam-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .lam-sub {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .lam-row {
+            display: grid;
+            grid-template-columns: 2.5rem 1fr auto;
+            align-items: start;
+            gap: 1.2rem;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--faint);
+            transition: background 0.15s;
+        }
+
+        .lam-row:last-child { border-bottom: none; }
+
+        .lam-n {
+            font-size: 0.63rem;
+            color: var(--muted);
+            padding-top: 0.15rem;
+        }
+
+        .lam-who {
+            font-size: 0.82rem;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .lam-what {
+            font-size: 0.72rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .lam-r { font-size: 0.7rem; text-align: right; white-space: nowrap; }
+        .lam-r.open    { color: var(--accent); }
+        .lam-r.sealed  { color: var(--muted); letter-spacing: 0.08em; }
+
+        .blk {
+            background: var(--muted);
+            color: var(--muted);
+            border-radius: 2px;
+            padding: 0 3px;
+            user-select: none;
+        }
+
+        /* ─── FOOTER ──────────────────────────────────────── */
+        #footer {
+            border-top: 1px solid var(--faint);
+            padding: 2rem clamp(1.5rem, 5vw, 4rem);
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.68rem;
+            color: var(--muted);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .f-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+        .f-links a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .f-links a:hover { color: var(--accent); }
+
+        /* ─── PLACEHOLDER FALLBACK ────────────────────────── */
+        .photo-placeholder {
+            height: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 0.72rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .photo-placeholder span:first-child { color: var(--dim); font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+<!-- ─── BOOT SCREEN ─────────────────────────────────────── -->
+<div id="boot">
+    <div id="boot-lines">
+        <span class="bl">VarunOS v0.18 initializing...</span>
+        <span class="bl">› mounting processes<span style="color:var(--muted)">............</span><span style="color:var(--green)">6 active</span></span>
+        <span class="bl">› memory allocation<span style="color:var(--muted)">.............</span><span style="color:var(--amber)">4K reserved for insults / 512MB for everything else</span></span>
+        <span class="bl">› sleep mode<span style="color:var(--muted)">.................</span><span style="color:var(--red)">disabled</span></span>
+        <span class="bl">› loading personality<span style="color:var(--muted)">...........</span><span style="color:var(--green)">done</span></span>
+        <span class="bl">&nbsp;</span>
+        <span class="bl" style="color:var(--text)">ready.<span class="bc"></span></span>
+    </div>
+</div>
+
+<!-- ─── MAIN ───────────────────────────────────────────── -->
+<div id="main">
+
+    <!-- HERO -->
+    <section id="hero">
+
+        <!-- Photo window -->
+        <div class="win" id="hero-photo">
+            <div class="win-bar">
+                <div class="dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div>
+                <span class="win-title">varun.jpg — preview</span>
+            </div>
+            <div class="win-body" style="padding:0">
+                <div class="photo-wrap" id="photo-wrap">
+                    <img
+                        src="./varun.jpg.jpeg"
+                        alt="Varun Ranjan"
+                        id="hero-img"
+                        onerror="document.getElementById('photo-wrap').innerHTML='<div class=\'photo-placeholder\'><span>[ ]</span><span>drop varun.jpg alongside index.html</span></div>'"
+                    >
+                    <div class="photo-shade"></div>
+                    <div class="photo-tag">varun ranjan · 2026</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero text -->
+        <div id="hero-text">
+            <div class="h-label">varunos v0.18 · process running</div>
+            <div class="h-name">VARUN<br>RANJAN</div>
+            <div class="h-bar"></div>
+            <div class="h-meta">
+                <strong>18.</strong> Builder. Permanent student.<br>
+                IVB Year 2 &nbsp;·&nbsp; Founder's Office, Hexalog<br>
+                M&A Intern, Imarticus &nbsp;·&nbsp; Venture Scout, Campus Fund<br>
+                <span style="color:var(--muted)">Currently running 6 things.</span><br>
+                <span style="color:var(--muted)">At least one will fail.</span><br>
+                <span style="color:var(--faint)">Already priced in.</span>
+            </div>
+            <div class="h-tagline">the run is all that matters.</div>
+        </div>
+
+    </section>
+
+    <!-- ACTIVE PROCESSES -->
+    <section id="processes">
+        <div class="win">
+            <div class="win-bar">
+                <div class="dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div>
+                <span class="win-title">system monitor — active processes</span>
+            </div>
+            <div style="padding:0">
+                <table class="ptable">
+                    <thead>
+                        <tr>
+                            <th>PID</th>
+                            <th>PROCESS</th>
+                            <th>STATUS</th>
+                            <th>LOAD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pid">001</td>
+                            <td>hexalog / founders-office</td>
+                            <td class="s-active"><span class="s-dot"></span>ACTIVE</td>
+                            <td class="load">high</td>
+                        </tr>
+                        <tr>
+                            <td class="pid">002</td>
+                            <td>imarticus / m&amp;a-intern</td>
+                            <td class="s-active"><span class="s-dot"></span>ACTIVE</td>
+                            <td class="load">medium</td>
+                        </tr>
+                        <tr>
+                            <td class="pid">003</td>
+                            <td>gtm-engine.build</td>
+                            <td class="s-compile"><span class="s-dot"></span>COMPILING</td>
+                            <td class="load">—</td>
+                        </tr>
+                        <tr>
+                            <td class="pid">004</td>
+                            <td>saas-ventures [ multi ]</td>
+                            <td class="s-compile"><span class="s-dot"></span>SPAWNING</td>
+                            <td class="load">—</td>
+                        </tr>
+                        <tr>
+                            <td class="pid">005</td>
+                            <td>campus-fund / venture-scout</td>
+                            <td class="s-monitor"><span class="s-dot"></span>MONITORING</td>
+                            <td class="load">low</td>
+                        </tr>
+                        <tr>
+                            <td class="pid">006</td>
+                            <td>ivb / year-2</td>
+                            <td class="s-active"><span class="s-dot"></span>ENROLLED</td>
+                            <td class="load">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- MONOLOGUE -->
+    <section id="monologue">
+        <div class="sec-label">kernel.log — interrupted monologue</div>
+        <div class="mono-body">
+
+            <p>
+                I opened a café at 17. Invested everything I'd made in the stock market into it —
+                location, fit-out, the whole infrastructure. It failed.<span class="fn" data-target="f1">[1]</span>
+            </p>
+            <div class="fn-box" id="f1">I opened a Google Doc the same week and started the next thing.</div>
+
+            <p>
+                My computer teacher laughed when I said I was doing business.
+                In class. Out loud. Like it was the setup to a joke.<span class="fn" data-target="f2">[2]</span>
+            </p>
+            <div class="fn-box" id="f2">I smiled and walked away. I'm still walking.</div>
+
+            <p>
+                Moved four cities in twelve months. Left things behind in each one —
+                <span class="dim">not by accident.</span><span class="fn" data-target="f3">[3]</span>
+                Somewhere between city two and city three I stopped trying to explain it.
+            </p>
+            <div class="fn-box" id="f3">I collect exits, not things.</div>
+
+            <p>
+                The ISC board gave me 57%.<span class="fn" data-target="f4">[4]</span>
+            </p>
+            <div class="fn-box" id="f4">I kept it. It documents well — especially next to the M&A work at Imarticus and the GTM strategy at Hexalog. Nice contrast.</div>
+
+            <p class="dim">
+                I'm 18 and running 6 things simultaneously.
+                I didn't plan to run 6 things.
+                I just kept adding processes and never killed the old ones.
+            </p>
+
+        </div>
+    </section>
+
+    <!-- LAMINATED LIST -->
+    <section id="laminated">
+        <div class="win">
+            <div class="win-bar">
+                <div class="dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div>
+                <span class="win-title">laminated_list.txt — read only</span>
+            </div>
+            <div style="padding: 1.8rem 1.8rem 0.5rem">
+
+                <div class="lam-header">
+                    <div class="lam-title">people who said it wouldn't work.</div>
+                    <div class="lam-sub">I kept the list. it's laminated.</div>
+                </div>
+
+                <div class="lam-row">
+                    <div class="lam-n">01</div>
+                    <div>
+                        <div class="lam-who">Computer Teacher</div>
+                        <div class="lam-what">"laughed when I said I was doing business."</div>
+                    </div>
+                    <div class="lam-r open">smiled. kept going.</div>
+                </div>
+
+                <div class="lam-row">
+                    <div class="lam-n">02</div>
+                    <div>
+                        <div class="lam-who">My Father</div>
+                        <div class="lam-what"><span class="blk">had his reservations</span></div>
+                    </div>
+                    <div class="lam-r sealed">— status: updated —</div>
+                </div>
+
+                <div class="lam-row">
+                    <div class="lam-n">03</div>
+                    <div>
+                        <div class="lam-who">My Friends</div>
+                        <div class="lam-what">"thought it was a phase."</div>
+                    </div>
+                    <div class="lam-r sealed">[ CONFIDENTIAL ]</div>
+                </div>
+
+                <div class="lam-row">
+                    <div class="lam-n" style="color:var(--faint)">—</div>
+                    <div>
+                        <div class="lam-who" style="color:var(--muted)">Others</div>
+                        <div class="lam-what"><span class="blk">██████ ████ ████ ████████ ██████</span></div>
+                    </div>
+                    <div class="lam-r sealed">[ REDACTED ]</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <span>varun ranjan &nbsp;·&nbsp; 2026</span>
+        <div class="f-links">
+            <a href="#">instagram</a>
+            <a href="#">linkedin</a>
+            <a href="#">campus fund</a>
+        </div>
+    </footer>
+
+</div><!-- /#main -->
+
+<script>
+    // ── Boot sequence ────────────────────────────────────────
+    const bootLines = document.querySelectorAll('#boot-lines .bl');
+    const bootEl    = document.getElementById('boot');
+    const mainEl    = document.getElementById('main');
+
+    let t = 0;
+    bootLines.forEach((line, i) => {
+        t += i === 0 ? 120 : 320;
+        setTimeout(() => line.classList.add('show'), t);
+    });
+
+    // Fade out boot, show main
+    setTimeout(() => {
+        bootEl.classList.add('out');
+        mainEl.classList.add('show');
+    }, t + 700);
+
+    setTimeout(() => {
+        bootEl.style.display = 'none';
+    }, t + 1400);
+
+    // ── Footnote toggle ──────────────────────────────────────
+    document.querySelectorAll('.fn').forEach(fn => {
+        fn.addEventListener('click', () => {
+            const box = document.getElementById(fn.dataset.target);
+            const isOpen = box.classList.contains('open');
+
+            // Close all
+            document.querySelectorAll('.fn-box.open').forEach(b => b.classList.remove('open'));
+
+            // Toggle this one
+            if (!isOpen) box.classList.add('open');
+        });
+    });
+</script>
+
+</body>
+</html>

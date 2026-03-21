@@ -68,7 +68,7 @@ exports.handler = async () => {
 
         const artists = (topArtists.items || []).map(a => ({
             name:      a.name,
-            genres:    a.genres.slice(0, 2),
+            genres:    (a.genres || []).slice(0, 2),
             image:     a.images?.[1]?.url || a.images?.[0]?.url || null,
             url:       a.external_urls.spotify,
             followers: a.followers.total,

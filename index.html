@@ -132,45 +132,90 @@
             margin: 0 auto;
         }
 
-        /* ─── MOBILE ──────────────────────────────────────── */
+        /* ─── TABLET ──────────────────────────────────────── */
         @media (max-width: 860px) {
             #hero {
-                grid-template-columns: 130px 1fr;
+                grid-template-columns: 160px 1fr;
                 min-height: auto;
-                padding-top: 2rem;
+                padding: 1.5rem;
                 gap: 0;
+                align-items: start;
             }
+            #hero-photo .win-bar { padding: 6px 10px; }
+            #hero-photo .dots span { width: 8px; height: 8px; }
+            #hero-photo .win-title { font-size: 0.55rem; }
+            .photo-tag { display: none; }
+
             #hero-text {
-                padding: 0.75rem 1rem 1rem 1rem;
+                padding: 0 0 0 1rem;
+                align-self: center;
             }
-            .h-label { font-size: 0.55rem; margin-bottom: 0.6rem; }
-            .h-name  { font-size: 1.9rem; }
-            .h-bar   { margin: 0.9rem 0; width: 24px; }
-            .h-meta  { font-size: 0.68rem; line-height: 1.8; margin-bottom: 1.2rem; }
-            .h-tagline { font-size: 0.8rem; }
+            .h-label { font-size: 0.5rem; margin-bottom: 0.5rem; }
+            .h-name  { font-size: 2rem; line-height: 0.95; }
+            .h-bar   { margin: 0.8rem 0; width: 22px; height: 2px; }
+            .h-meta  { font-size: 0.65rem; line-height: 1.8; margin-bottom: 1rem; }
+            .h-tagline { font-size: 0.78rem; }
         }
 
+        /* ─── MOBILE ──────────────────────────────────────── */
         @media (max-width: 540px) {
-            #hero { grid-template-columns: 110px 1fr; padding: 1.5rem 1rem; }
+            /* Hero — photo beside name, compact */
+            #hero {
+                grid-template-columns: 110px 1fr;
+                padding: 1.2rem 0.8rem;
+            }
             .h-name { font-size: 1.5rem; }
-            .h-meta { font-size: 0.62rem; }
+            .h-meta { font-size: 0.58rem; line-height: 1.7; margin-bottom: 0.8rem; }
+            .h-meta br { display: none; }
+            .h-tagline { font-size: 0.7rem; }
+            .h-bar { margin: 0.6rem 0; }
 
-            #processes { padding: 0 1rem 3rem; }
+            /* Window chrome — smaller on mobile */
+            .win-bar { padding: 6px 10px; }
+            .win-title { font-size: 0.55rem; }
+            .dots span { width: 8px; height: 8px; }
+
+            /* Processes — keep all columns, just tighter */
+            #processes { padding: 0 0.8rem 2.5rem; }
+            .ptable { font-size: 0.62rem; }
             .ptable thead th,
-            .ptable tbody td { padding: 0.7rem 0.6rem; font-size: 0.7rem; }
-            .load { display: none; }
-            .ptable th:last-child { display: none; }
+            .ptable tbody td { padding: 0.55rem 0.4rem; }
+            .pid { font-size: 0.52rem; }
+            .load { font-size: 0.55rem; }
 
-            #monologue { padding: 4rem 1.2rem; }
-            .mono-body { font-size: 0.95rem; line-height: 1.9; }
+            /* Monologue */
+            #monologue { padding: 3rem 1rem; }
+            .sec-label { font-size: 0.52rem; margin-bottom: 2rem; }
+            .mono-body { font-size: 0.85rem; line-height: 1.85; }
+            .mono-body p { margin-bottom: 1.2rem; }
+            .fn-box { font-size: 0.68rem; padding: 0.4rem 0.8rem; }
 
-            #laminated { padding: 0 1rem 4rem; }
-            #spotify   { padding: 0 1rem 3rem; }
-            #footer    { padding: 1.5rem 1rem; font-size: 0.62rem; }
-            .f-links   { gap: 1.2rem; }
+            /* Spotify */
+            #spotify { padding: 0 0.8rem 2.5rem; }
 
-            .sec-label { font-size: 0.55rem; }
-            .lam-r { display: none; }
+            /* Laminated — keep responses visible, just smaller */
+            #laminated { padding: 0 0.8rem 3rem; }
+            .lam-row { gap: 0.5rem; grid-template-columns: 1.8rem 1fr auto; padding: 0.8rem 0; }
+            .lam-title { font-size: 0.82rem; }
+            .lam-sub { font-size: 0.6rem; }
+            .lam-who { font-size: 0.7rem; }
+            .lam-what { font-size: 0.6rem; }
+            .lam-r { font-size: 0.55rem; }
+            .lam-n { font-size: 0.52rem; }
+
+            /* Footer */
+            #footer { padding: 1.5rem 0.8rem; font-size: 0.58rem; }
+            .f-links { gap: 1rem; }
+        }
+
+        /* ─── VERY SMALL ─────────────────────────────────── */
+        @media (max-width: 380px) {
+            #hero { grid-template-columns: 90px 1fr; padding: 1rem 0.6rem; }
+            .h-name { font-size: 1.3rem; }
+            .h-label { font-size: 0.45rem; }
+            .h-meta { font-size: 0.52rem; }
+            .h-tagline { font-size: 0.62rem; }
+            #hero-text { padding: 0 0 0 0.6rem; }
         }
 
         #hero-photo .win-body { padding: 0; }

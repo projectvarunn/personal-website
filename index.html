@@ -135,40 +135,29 @@
         /* ─── TABLET ──────────────────────────────────────── */
         @media (max-width: 860px) {
             #hero {
-                grid-template-columns: 160px 1fr;
+                grid-template-columns: 1fr;
                 min-height: auto;
                 padding: 1.5rem;
-                gap: 0;
-                align-items: start;
+                gap: 1.5rem;
             }
-            #hero-photo .win-bar { padding: 6px 10px; }
-            #hero-photo .dots span { width: 8px; height: 8px; }
-            #hero-photo .win-title { font-size: 0.55rem; }
-            .photo-tag { display: none; }
+            #hero-text  { order: 1; padding: 0; }
+            #hero-photo { order: 2; }
 
-            #hero-text {
-                padding: 0 0 0 1rem;
-                align-self: center;
-            }
-            .h-label { font-size: 0.5rem; margin-bottom: 0.5rem; }
-            .h-name  { font-size: 2rem; line-height: 0.95; }
-            .h-bar   { margin: 0.8rem 0; width: 22px; height: 2px; }
-            .h-meta  { font-size: 0.65rem; line-height: 1.8; margin-bottom: 1rem; }
-            .h-tagline { font-size: 0.78rem; }
+            .h-label { font-size: 0.55rem; margin-bottom: 0.6rem; }
+            .h-name  { font-size: 2.5rem; line-height: 0.95; }
+            .h-bar   { margin: 1rem 0; width: 28px; height: 2px; }
+            .h-meta  { font-size: 0.72rem; line-height: 1.9; margin-bottom: 1.2rem; }
+            .h-tagline { font-size: 0.85rem; }
         }
 
         /* ─── MOBILE ──────────────────────────────────────── */
         @media (max-width: 540px) {
-            /* Hero — photo beside name, compact */
-            #hero {
-                grid-template-columns: 110px 1fr;
-                padding: 1.2rem 0.8rem;
-            }
-            .h-name { font-size: 1.5rem; }
-            .h-meta { font-size: 0.58rem; line-height: 1.7; margin-bottom: 0.8rem; }
-            .h-meta br { display: none; }
-            .h-tagline { font-size: 0.7rem; }
-            .h-bar { margin: 0.6rem 0; }
+            /* Hero — text first, full photo below tagline */
+            #hero { padding: 1.2rem 0.8rem; gap: 1.2rem; }
+            .h-name { font-size: 2rem; }
+            .h-meta { font-size: 0.6rem; line-height: 1.75; margin-bottom: 0.8rem; }
+            .h-tagline { font-size: 0.75rem; }
+            .h-bar { margin: 0.7rem 0; }
 
             /* Window chrome — smaller on mobile */
             .win-bar { padding: 6px 10px; }
@@ -210,12 +199,11 @@
 
         /* ─── VERY SMALL ─────────────────────────────────── */
         @media (max-width: 380px) {
-            #hero { grid-template-columns: 90px 1fr; padding: 1rem 0.6rem; }
-            .h-name { font-size: 1.3rem; }
-            .h-label { font-size: 0.45rem; }
-            .h-meta { font-size: 0.52rem; }
-            .h-tagline { font-size: 0.62rem; }
-            #hero-text { padding: 0 0 0 0.6rem; }
+            #hero { padding: 1rem 0.6rem; }
+            .h-name { font-size: 1.6rem; }
+            .h-label { font-size: 0.48rem; }
+            .h-meta { font-size: 0.55rem; }
+            .h-tagline { font-size: 0.65rem; }
         }
 
         #hero-photo .win-body { padding: 0; }
